@@ -52,7 +52,7 @@ public class MainController {
 
     @GetMapping("/jooq")
     public ResponseEntity<?> jooq() {
-        List<ProductDTO> response = ctx.select(
+        List<ProductDTO> result1 = ctx.select(
                         Product.PRODUCT.ID,
                         Product.PRODUCT.DESCRIPTION,
                         Product.PRODUCT.NAME
@@ -60,12 +60,14 @@ public class MainController {
                 .from(Product.PRODUCT)
                 .fetch(mapping((t1, t2, t3) -> new ProductDTO(t1, t2, t3)));
 
-        var x = ctx.selectFrom(Product.PRODUCT).fetch(r -> {
+        // TAKI SELECT * FROM PRODUCT
+        var result2 = ctx.selectFrom(Product.PRODUCT).fetch(r -> {
             return r.getId();
         });
 
+        // NATIVE QUERY
         String sql = "SELECT id, name, description FROM product WHERE price > ?";
-        var x2 = ctx.fetch(sql, 0)
+        var result3 = ctx.fetch(sql, 0)
                 .map(record -> {
                     return new ProductDTO(
                             record.get("id", Long.class),
@@ -74,7 +76,8 @@ public class MainController {
                     );
                 });
 
-        var result = ctx.select(
+        // ZWRACANIE TABLIC
+        var result4 = ctx.select(
                         Product.PRODUCT.ID,
                         Product.PRODUCT.NAME,
                         Product.PRODUCT.DESCRIPTION,
@@ -91,7 +94,8 @@ public class MainController {
                 .fetch(mapping(ProductWithRolesDTO::new));
 
 
-        var x4 = ctx.select(
+        // INNY SPOSÓB MAPOWANIA
+        var result5 = ctx.select(
                         Product.PRODUCT.ID.as("product_id"),
                         Product.PRODUCT.NAME.as("product_name"),
                         Product.PRODUCT.DESCRIPTION.as("product_description"),
@@ -117,7 +121,7 @@ public class MainController {
                 .from(Product.PRODUCT)
                 .fetch();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(result1);
     }
 
 }
