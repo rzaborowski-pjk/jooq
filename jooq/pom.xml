@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.4.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>pjk.rafzab</groupId>
+	<artifactId>jooq</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>jooq</name>
+	<description>jooq</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jooq</artifactId>
+		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>org.jooq</groupId>-->
+<!--			<artifactId>jooq</artifactId>-->
+<!--			<version>${jooq.version}</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.jooq</groupId>-->
+<!--			<artifactId>jooq-meta</artifactId>-->
+<!--			<version>${jooq.version}</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.jooq</groupId>-->
+<!--			<artifactId>jooq-codegen</artifactId>-->
+<!--			<version>${jooq.version}</version>-->
+<!--		</dependency>-->
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>${jooq.version}</version>
+				<executions>
+					<execution>
+						<id>generate-jooq-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<jdbc>
+								<driver>org.postgresql.Driver</driver> <!-- Zmień na odpowiedni sterownik -->
+								<url>jdbc:postgresql://localhost:5432/jooq</url> <!-- URL bazy danych -->
+								<user>postgres</user> <!-- Nazwa użytkownika -->
+								<password>1234</password> <!-- Hasło użytkownika -->
+							</jdbc>
+
+
+							<generator>
+								<database>
+									<name>org.jooq.meta.postgres.PostgresDatabase</name> <!-- Typ bazy danych -->
+									<inputSchema>public</inputSchema> <!-- Schemat bazy danych -->
+									<excludes>flyway_schema_history</excludes> <!-- Wykluczenie tabeli migracji Flyway -->
+								</database>
+
+								<!-- Ustawienia docelowego pakietu i katalogu -->
+								<target>
+									<packageName>pjk.rafzab.jooq.generated</packageName> <!-- Pakiet docelowy -->
+									<directory>${project.build.directory}/generated-sources/jooq</directory> <!-- Ścieżka docelowa -->
+								</target>
+							</generator>
+						</configuration>
+
+
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Dodanie wygenerowanego kodu do źródeł projektu -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven-resources-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>add-generated-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/generated-sources/jooq</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+		<sourceDirectory>${project.build.directory}/generated-sources/jooq</sourceDirectory>
+	</build>
+
+</project>
